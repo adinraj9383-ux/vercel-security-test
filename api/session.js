@@ -13,11 +13,12 @@ export default function handler(req, res) {
     });
   }
 
-  // Deliberately simple lab token.
-  const token = "lab-token-adin-123";
+  // Generate a random value for this lab session.
+  const token =
+    crypto.randomUUID() + "-" + crypto.randomUUID();
 
   res.status(200).json({
     success: true,
-    token: token
+    token
   });
 }

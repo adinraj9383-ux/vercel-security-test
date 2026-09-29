@@ -1,5 +1,4 @@
 export default function handler(req, res) {
-  const loggedInUser = req.query.user;
   const requestedProfile = req.query.id;
 
   const profiles = {
@@ -13,27 +12,21 @@ export default function handler(req, res) {
     }
   };
 
-  // Simulated authentication
-  if (!loggedInUser) {
-    return res.status(401).json({
-      error: "Not authenticated"
-    });
-  }
+  // Simulated server-side authenticated identity.
+  // In a real application this would come from a validated session.
+  const authenticatedUser = "1001";
 
-  // Authorization check
-  if (loggedInUser !== requestedProfile) {
-    return res.status(403).json({
-      error: "You are not allowed to access this profile"
-    });
-  }
-
-  const profile = profiles[requestedProfile];
-
-  if (!profile) {
+  if (!profiles[requestedProfile]) {
     return res.status(404).json({
       error: "User not found"
     });
   }
 
-  res.status(200).json(profile);
+  if (requestedProfile !== authenticatedUser) {
+    return res.status(403).json({
+      error: "You are not allowed to access this profile"
+    });
+  }
+
+  res.status(200).json(profiles[requestedProfile]);
 }

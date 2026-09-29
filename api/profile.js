@@ -1,5 +1,6 @@
 export default function handler(req, res) {
-  const userId = req.query.id;
+  const loggedInUser = req.query.user;
+  const requestedProfile = req.query.id;
 
   const profiles = {
     "1001": {
@@ -12,7 +13,21 @@ export default function handler(req, res) {
     }
   };
 
-  const profile = profiles[userId];
+  // Simulated authentication
+  if (!loggedInUser) {
+    return res.status(401).json({
+      error: "Not authenticated"
+    });
+  }
+
+  // Authorization check
+  if (loggedInUser !== requestedProfile) {
+    return res.status(403).json({
+      error: "You are not allowed to access this profile"
+    });
+  }
+
+  const profile = profiles[requestedProfile];
 
   if (!profile) {
     return res.status(404).json({
